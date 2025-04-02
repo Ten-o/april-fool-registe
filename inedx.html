@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>限时福利 - VIP会员注册</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            transition: all 0.3s ease; /* 让所有变换更平滑 */
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #1a73e8;
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #1a73e8, #34a853, #fbbc05, #ea4335);
+            transform: translateX(-100%);
+            animation: rainbow 2s linear infinite;
+        }
+
+        @keyframes rainbow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s;
+            background: transparent;
+            position: relative;
+            z-index: 1;
+        }
+
+        input:focus {
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s;
+        }
+
+        button:hover::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .error-message {
+            display: none;
+            color: #d93025;
+            background: #fce8e6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            text-align: center;
+            animation: fadeIn 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .error-message::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+            transform: translateX(-100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1a73e8;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes rotate3D {
+            0% {
+                transform: translate(-50%, -50%) rotate3d(1, 1, 1, 0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate3d(1, 1, 1, 360deg);
+            }
+        }
+
+        .shake { animation: shake 0.5s ease-in-out; }
+        .bounce { animation: bounce 0.5s ease-in-out; }
+        .rotate3D {
+            animation: rotate3D 4s linear infinite;  /* 从2s改为4s，使旋转更慢 */
+        }
+
+        .emoji-rain {
+            position: fixed;
+            top: -20px;
+            animation: emojiDrop 3s linear forwards;
+            z-index: 1000;
+            font-size: 24px;
+            user-select: none;
+        }
+
+        @keyframes emojiDrop {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(120vh) rotate(720deg); }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: center;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .modal.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #1a73e8;
+            border-radius: 50%;
+        }
+
+        /* 添加新样式 */
+        .vip-badge {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-left: 8px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .benefits {
+            font-size: 0.9em;
+            color: #666;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+
+        .benefits li {
+            margin: 5px 0;
+        }
+
+        .countdown {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .price {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.2em;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+            margin-right: 10px;
+        }
+
+        .current-price {
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 1.4em;
+        }
+
+        .share-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .share-button:hover {
+            transform: scale(1.05);
+            background: #1557b0;
+        }
+
+        .copy-success {
+            display: none;
+            color: #34a853;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* 基础样式优化 */
+        body {
+            padding: 16px;
+            min-height: 100vh;
+            min-height: -webkit-fill-available; /* 修复 iOS Safari 高度问题 */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 1.5rem;
+            margin: 0 auto;
+        }
+
+        /* 移动端响应式调整 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                width: 92%;
+                margin: 1rem auto;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .benefits ul li {
+                font-size: 0.95rem;
+                padding: 0.5rem 0;
+            }
+
+            /* 优化表单元素 */
+            .form-group {
+                margin-bottom: 1rem;
+            }
+
+            input[type="tel"],
+            input[type="password"] {
+                height: 44px; /* 增加输入框高度，提升可点击区域 */
+                font-size: 16px; /* 防止 iOS 自动缩放 */
+                padding: 0.5rem 1rem;
+            }
+
+            button[type="submit"] {
+                height: 48px; /* 增加按钮高度 */
+                font-size: 1rem;
+                margin-top: 1.5rem;
+                width: 100%;
+                border-radius: 24px;
+            }
+
+            /* 优化模态框 */
+            .modal {
+                width: 90%;
+                max-width: 340px;
+                padding: 1.25rem;
+            }
+
+            .stat-item {
+                padding: 0.5rem;
+            }
+
+            .stat-value {
+                font-size: 1.4rem;
+            }
+
+            .stat-label {
+                font-size: 0.8rem;
+            }
+
+            /* 优化操作按钮 */
+            .action-buttons {
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 1.5rem;
+            }
+
+            .action-button {
+                width: 100%;
+                padding: 12px 0;
+                justify-content: center;
+            }
+
+            /* 优化倒计时显示 */
+            .countdown {
+                font-size: 1.2rem;
+                font-weight: bold;
+            }
+
+            /* 优化价格显示 */
+            .price {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
+            }
+
+            /* 添加安全区域支持 */
+            @supports (padding: max(0px)) {
+                body {
+                    padding-left: max(16px, env(safe-area-inset-left));
+                    padding-right: max(16px, env(safe-area-inset-right));
+                    padding-bottom: max(16px, env(safe-area-inset-bottom));
+                }
+            }
+        }
+
+        /* 添加触摸反馈 */
+        @media (hover: none) {
+            button:active,
+            .action-button:active {
+                transform: scale(0.98);
+                opacity: 0.9;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <h1>🎉 限时特惠会员注册 <span class="vip-badge">VIP</span></h1>
+
+        <div style="text-align: center; color: #e74c3c; margin-bottom: 20px;">
+            震撼福利！首次注册即可享受超值特权！<br>
+            <span style="font-size: 0.9em; color: #666;">错过今天，再等一年！</span>
+        </div>
+
+        <div class="benefits">
+            <p>🎁 尊享会员权益：</p>
+            <ul>
+                <li>⚡️ 极速下载通道（1000MB/s）</li>
+                <li>💾 无限容量云存储</li>
+                <li>🎬 4K超清视频在线播放</li>
+                <li>🔒 文件加密保护</li>
+                <li>🤖 ChatGPT、Claude、文心一言等AI助手无限调用</li>
+            </ul>
+        </div>
+
+        <div class="price">
+            <span class="original-price">原价：¥365/年</span>
+            <span class="current-price">限时特惠：¥0/年</span>
+        </div>
+
+        <div style="text-align: center; margin: 15px 0; color: #1a73e8; font-size: 0.9em;">
+            🔥 已有 9999+ 用户抢先注册<br>
+            ⭐️ 用户好评度 99.9%
+        </div>
+
+        <p style="text-align: center; color: #e74c3c;">
+            ⏰ 倒计时：<span class="countdown" id="countdown">29:59</span>
+        </p>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="username">账户</label>
+                <input type="tel" id="username" placeholder="请输入账户" required>
+            </div>
+            <div class="form-group">
+                <label for="password">登录密码</label>
+                <input type="password" id="password" placeholder="请设置6-20位密码" required>
+            </div>
+            <button type="submit" id="submitBtn">立即注册领取会员特权</button>
+        </form>
+        <div class="error-message" id="errorMessage"></div>
+    </div>
+
+    <div class="modal" id="greetingModal">
+        <div class="modal-emoji">🎈</div>
+        <h2>愚人节快乐！</h2>
+        <p>这是一个无害的小玩笑<br>
+           希望能给你带来一个微笑 😊<br>
+           记得善待他人，传递快乐！</p>
+
+        <!-- 添加成就展示 -->
+        <div class="achievement">
+            <div class="achievement-badge">🏆 解锁成就</div>
+            <div class="achievement-title">愚人节欢乐使者</div>
+            <div class="achievement-progress">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="prank-stats">
+            <div class="stat-item">
+                <div class="stat-value" id="prankCount">1,314</div>
+                <div class="stat-label">今日已整蛊</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="shareCount">520</div>
+                <div class="stat-label">已分享</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="joyIndex">99%</div>
+                <div class="stat-label">欢乐指数</div>
+            </div>
+        </div>
+
+        <!-- 添加奖励展示区 -->
+        <div class="rewards">
+            <div class="reward-item">
+                <span class="reward-emoji">🎭</span>
+                <span class="reward-text">整蛊大师</span>
+            </div>
+            <div class="reward-item">
+                <span class="reward-emoji">🌟</span>
+                <span class="reward-text">欢乐传播者</span>
+            </div>
+            <div class="reward-item">
+                <span class="reward-emoji">🎪</span>
+                <span class="reward-text">节日精灵</span>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-button primary" onclick="shareToFriends()">
+                <i class="fas fa-share-alt"></i> 分享给好友
+            </button>
+            <div class="button-group">
+                <button class="action-button secondary" onclick="playAgain()">
+                    <i class="fas fa-redo"></i> 再玩一次
+                </button>
+                <a href="https://github.com/yourusername/april-fools-prank" target="_blank" class="action-button secondary github-button">
+                    <i class="fab fa-github"></i> 项目源码
+                </a>
+            </div>
+        </div>
+
+        <div class="copy-success" id="copySuccess">复制成功！快去整蛊小伙伴吧 😆</div>
+    </div>
+
+    <style>
+        /* 添加新样式 */
+        .achievement {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .achievement-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ffd700;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            transform: rotate(15deg);
+        }
+
+        .achievement-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .achievement-progress {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            height: 6px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 100%;
+            background: #ffd700;
+            animation: progress 1s ease-out;
+        }
+
+        .rewards {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .reward-item {
+            text-align: center;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .reward-emoji {
+            font-size: 2em;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .reward-text {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes progress {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .modal {
+            animation: modalShow 0.5s ease-out;
+        }
+
+        @keyframes modalShow {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .stat-item {
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #f0f7ff, #fff);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .prank-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #1a73e8;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 25px;
+            padding: 0 20px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-button {
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            flex: 1;
+        }
+
+        .action-button.primary {
+            background: linear-gradient(135deg, #1a73e8, #1557b0);
+            color: white;
+            box-shadow: 0 4px 15px rgba(26, 115, 232, 0.2);
+            width: 100%;
+            font-weight: 500;
+        }
+
+        .action-button.secondary {
+            background: #f8f9fa;
+            color: #5f6368;
+            border: 1px solid #dadce0;
+            font-size: 0.9rem;
+        }
+
+        .action-button.github-button {
+            color: #24292e;
+            text-decoration: none;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .action-button.primary:hover {
+            background: linear-gradient(135deg, #1557b0, #1a73e8);
+            box-shadow: 0 6px 20px rgba(26, 115, 232, 0.25);
+        }
+
+        .action-button.secondary:hover {
+            background: #f1f3f4;
+            border-color: #dadce0;
+        }
+
+        .action-button i {
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .action-buttons {
+                padding: 0 10px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+
+    <script>
+        const form = document.getElementById('registerForm');
+        const container = document.getElementById('mainContainer');
+        const modal = document.getElementById('greetingModal');
+        const errorMessage = document.getElementById('errorMessage');
+        const submitBtn = document.getElementById('submitBtn');
+        let clickCount = 0;
+
+        const emojis = ['😂', '🤣', '😅', '😆', '😊', '🎉', '✨', '🌈', '🎨', '🎭'];
+        const messages = [
+            {
+                text: "信号不太好哦 请点击注册...",
+                delay: 1000,
+                loading: true,
+                effect: 'shake'
+            },
+            {
+                text: "糟糕！服务器在打瞌睡 😴 正在大声叫醒它...",
+                delay: 1500,
+                loading: true,
+                effect: 'bounce'
+            },
+            {
+                text: "服务器说它今天要休息，请稍后再试 🎮",
+                delay: 2000,
+                loading: true,
+                effect: 'rotate3D'
+            },
+            {
+                text: "服务器：'哈哈，愚人节快乐！' 🎉",
+                delay: 1000,
+                loading: false,
+                effect: 'rainbow'
+            }
+        ];
+
+        function createEmojiRain() {
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            const element = document.createElement('div');
+            element.className = 'emoji-rain';
+            element.textContent = emoji;
+            element.style.left = Math.random() * window.innerWidth + 'px';
+            element.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            document.body.appendChild(element);
+            setTimeout(() => element.remove(), 3000);
+        }
+
+        async function showError(message, showLoading = false) {
+            errorMessage.style.display = 'block';
+            errorMessage.innerHTML = `${showLoading ? '<span class="loading"></span>' : ''}${message}`;
+        }
+
+        async function handleSubmit(e) {
+            if (e) {
+                e.preventDefault();
+            }
+
+            // 只响应鼠标点击
+            if (!e || !e.type === 'submit') {
+                return;
+            }
+
+            clickCount++;
+            submitBtn.disabled = true;
+            const currentMessage = messages[clickCount - 1];
+
+            container.className = 'container';
+
+            if (clickCount === 1) {
+                container.style.transform = 'translate(-50%, -50%) translateX(50px)';
+            } else if (clickCount === 2) {
+                container.style.transform = 'translate(-50%, -50%) translateY(-20px)';
+            } else if (clickCount === 3) {
+                container.style.transition = 'all 1s ease';
+                container.classList.add('rotate3D');
+            } else {
+                container.style.transform = 'translate(-50%, -50%) scale(0)';
+                container.style.opacity = '0';
+
+                setTimeout(() => {
+                    modal.style.display = 'block';
+                    setTimeout(() => modal.classList.add('show'), 100);
+                    createConfetti();
+                }, 500);
+                return;
+            }
+
+            await showError(currentMessage.text, currentMessage.loading);
+            submitBtn.disabled = false;
+        }
+
+        function createConfetti() {
+            const colors = ['#1a73e8', '#ea4335', '#34a853', '#fbbc05'];
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = -10 + 'px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.transform = `scale(${Math.random() * 0.5 + 0.5})`;
+                document.body.appendChild(confetti);
+
+                const animation = confetti.animate([
+                    { transform: 'translateY(0) rotate(0)', opacity: 1 },
+                    { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+                ], {
+                    duration: 2000 + Math.random() * 3000,
+                    easing: 'cubic-bezier(.37,0,.63,1)'
+                });
+
+                animation.onfinish = () => confetti.remove();
+            }
+        }
+
+        // 添加鼠标躲避效果
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('mainContainer');
+            let dodgeCount = 0;
+            const maxDodgeDistance = 150; // 最大躲避距离
+
+            // 完全禁用回车提交
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // 鼠标躲避效果
+            document.addEventListener('mousemove', (e) => {
+                if (clickCount > 0) return; // 如果已经点击过，停止躲避
+
+                const rect = container.getBoundingClientRect();
+                const containerCenterX = rect.left + rect.width / 2;
+                const containerCenterY = rect.top + rect.height / 2;
+
+                const distanceX = e.clientX - containerCenterX;
+                const distanceY = e.clientY - containerCenterY;
+                const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+                if (distance < 200) { // 鼠标接近时触发躲避
+                    dodgeCount++;
+
+                    // 计算新位置，确保不超出视口
+                    let newX = -50; // 基础位置（-50%）
+                    let newY = -50; // 基础位置（-50%）
+
+                    // 根据鼠标位置计算躲避方向
+                    if (distanceX > 0) {
+                        newX -= Math.min(maxDodgeDistance, Math.random() * 100);
+                    } else {
+                        newX += Math.min(maxDodgeDistance, Math.random() * 100);
+                    }
+
+                    if (distanceY > 0) {
+                        newY -= Math.min(maxDodgeDistance, Math.random() * 100);
+                    } else {
+                        newY += Math.min(maxDodgeDistance, Math.random() * 100);
+                    }
+
+                    // 确保不超出视口边界
+                    const viewportWidth = window.innerWidth;
+                    const viewportHeight = window.innerHeight;
+                    const containerWidth = rect.width;
+                    const containerHeight = rect.height;
+
+                    // 限制X轴范围
+                    const minX = (-containerWidth / 2 / viewportWidth) * 100;
+                    const maxX = (viewportWidth - containerWidth / 2) / viewportWidth * 100 - 50;
+                    newX = Math.max(minX, Math.min(maxX, newX));
+
+                    // 限制Y轴范围
+                    const minY = (-containerHeight / 2 / viewportHeight) * 100;
+                    const maxY = (viewportHeight - containerHeight / 2) / viewportHeight * 100 - 50;
+                    newY = Math.max(minY, Math.min(maxY, newY));
+
+                    // 应用新位置
+                    container.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    container.style.transform = `translate(${newX}%, ${newY}%)`;
+
+                    // 添加随机轻微旋转
+                    const rotation = (Math.random() - 0.5) * 10;
+                    container.style.transform += ` rotate(${rotation}deg)`;
+
+                    // 一段时间后恢复原位
+                    setTimeout(() => {
+                        container.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                        container.style.transform = 'translate(-50%, -50%)';
+                    }, 500);
+                }
+            });
+
+            // 只保留点击提交事件
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                handleSubmit(e);
+            });
+
+            // 启动倒计时
+            updateCountdown();
+        });
+
+        // 添加倒计时功能
+        function updateCountdown() {
+            const countdownElement = document.getElementById('countdown');
+            let [minutes, seconds] = countdownElement.textContent.split(':').map(Number);
+
+            const timer = setInterval(() => {
+                if (seconds === 0) {
+                    if (minutes === 0) {
+                        clearInterval(timer);
+                        return;
+                    }
+                    minutes--;
+                    seconds = 59;
+                } else {
+                    seconds--;
+                }
+
+                countdownElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCountdown();
+        });
+
+        // 添加复制功能
+        const copyButton = document.getElementById('copyButton');
+        const copySuccess = document.getElementById('copySuccess');
+
+        const shareText = `🎉 震撼福利！VIP会员限时免费注册
+✨ 尊享会员特权：
+⚡ 极速下载通道 (1000MB/s)
+💾 无限容量云存储
+🎬 4K超清视频在线播放
+🔒 文件加密保护
+🤖 ChatGPT、Claude等AI助手无限调用
+🔥 已有9999+用户抢先注册
+⭐ 用户好评度99.9%
+⏰ 限时特惠：原价365元/年，现在0!!! 
+❗ 错过今天，再等一年！
+👉 立即注册：https://registe.ouklc.com/`;
+
+        copyButton.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(shareText);
+                copySuccess.style.display = 'block';
+                setTimeout(() => {
+                    copySuccess.style.display = 'none';
+                }, 2000);
+            } catch (err) {
+                // 如果clipboard API不可用，使用传统方法
+                const textarea = document.createElement('textarea');
+                textarea.value = shareText;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                copySuccess.style.display = 'block';
+                setTimeout(() => {
+                    copySuccess.style.display = 'none';
+                }, 2000);
+            }
+        });
+
+        // 统计数据管理
+        const Stats = {
+            // 获取今天的日期键
+            getTodayKey() {
+                const today = new Date();
+                return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+            },
+
+            // 初始化或获取今日数据
+            initTodayStats() {
+                const todayKey = this.getTodayKey();
+                let stats = localStorage.getItem(todayKey);
+
+                if (!stats) {
+                    stats = {
+                        prankCount: 0,
+                        shareCount: 0,
+                        clickCount: 0,
+                        lastReset: new Date().toISOString()
+                    };
+                    localStorage.setItem(todayKey, JSON.stringify(stats));
+                } else {
+                    stats = JSON.parse(stats);
+                }
+
+                return stats;
+            },
+
+            // 更新显示
+            updateDisplay() {
+                const stats = this.initTodayStats();
+                document.getElementById('prankCount').textContent = stats.prankCount.toLocaleString();
+                document.getElementById('shareCount').textContent = stats.shareCount.toLocaleString();
+                // 计算欢乐指数：基于点击和分享数据
+                const joyIndex = Math.min(99, Math.round((stats.clickCount + stats.shareCount * 2) / 3));
+                document.getElementById('joyIndex').textContent = `${joyIndex}%`;
+            },
+
+            // 增加整蛊计数
+            incrementPrankCount() {
+                const todayKey = this.getTodayKey();
+                const stats = this.initTodayStats();
+                stats.prankCount += 1;
+                localStorage.setItem(todayKey, JSON.stringify(stats));
+                this.updateDisplay();
+            },
+
+            // 增加分享计数
+            incrementShareCount() {
+                const todayKey = this.getTodayKey();
+                const stats = this.initTodayStats();
+                stats.shareCount += 1;
+                localStorage.setItem(todayKey, JSON.stringify(stats));
+                this.updateDisplay();
+            },
+
+            // 增加点击计数
+            incrementClickCount() {
+                const todayKey = this.getTodayKey();
+                const stats = this.initTodayStats();
+                stats.clickCount += 1;
+                localStorage.setItem(todayKey, JSON.stringify(stats));
+                this.updateDisplay();
+            },
+
+            // 重置统计
+            reset() {
+                const todayKey = this.getTodayKey();
+                const stats = {
+                    prankCount: 0,
+                    shareCount: 0,
+                    clickCount: 0,
+                    lastReset: new Date().toISOString()
+                };
+                localStorage.setItem(todayKey, JSON.stringify(stats));
+                this.updateDisplay();
+            }
+        };
+
+        // 分享功能
+        async function shareToFriends() {
+            try {
+                if (navigator.share) {
+                    await navigator.share({
+                        title: '限时福利！VIP会员免费注册',
+                        text: shareText,
+                        url: 'https://registe.ouklc.com/'
+                    });
+                } else {
+                    await copyPrankText();
+                }
+                Stats.updateDisplay();
+            } catch (err) {
+                console.error('分享失败:', err);
+                await copyPrankText();
+            }
+        }
+
+        // 复制功能
+        async function copyPrankText() {
+            try {
+                await navigator.clipboard.writeText(shareText);
+                const copySuccess = document.getElementById('copySuccess');
+                copySuccess.style.display = 'block';
+                setTimeout(() => {
+                    copySuccess.style.display = 'none';
+                }, 3000);
+            } catch (err) {
+                // 如果clipboard API不可用，使用传统方法
+                const textarea = document.createElement('textarea');
+                textarea.value = shareText;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                const copySuccess = document.getElementById('copySuccess');
+                copySuccess.style.display = 'block';
+                setTimeout(() => {
+                    copySuccess.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // 添加复制按钮的事件监听
+        document.addEventListener('DOMContentLoaded', () => {
+            const copyButton = document.getElementById('copyButton');
+            if (copyButton) {
+                copyButton.addEventListener('click', copyPrankText);
+            }
+        });
+
+        // 重置统计
+        function resetStats() {
+            if (confirm('确定要重置所有统计数据吗？')) {
+                Stats.reset();
+            }
+        }
+
+        // 再玩一次
+        function playAgain() {
+            // 重置表单和状态
+            clickCount = 0;
+            container.style.transform = 'translate(-50%, -50%)';
+            container.style.opacity = '1';
+            container.classList.remove('rotate3D');
+            container.style.transition = 'all 0.3s ease';
+            
+            // 隐藏弹窗
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+            
+            // 重置错误信息
+            errorMessage.style.display = 'none';
+            errorMessage.textContent = '';
+            
+            // 重置按钮状态
+            submitBtn.disabled = false;
+            
+            // 清空表单
+            form.reset();
+        }
+
+        // 修改原有的 handleSubmit 函数，添加点击统计
+        const originalHandleSubmit = handleSubmit;
+        handleSubmit = function(e) {
+            Stats.incrementClickCount();
+            return originalHandleSubmit(e);
+        };
+
+        // 页面加载时初始化统计显示
+        document.addEventListener('DOMContentLoaded', () => {
+            Stats.updateDisplay();
+        });
+    </script>
+</body>
+</html>
